@@ -1,0 +1,59 @@
+# Core FastAPI dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Pydantic for data validation
+pydantic>=2.7.0,<3.0
+pydantic-settings==2.1.0
+
+# File handling and encoding detection
+chardet==5.2.0
+python-magic==0.4.27
+
+# LLM integration (OpenAI)
+openai==1.3.7
+tiktoken>=0.7.0
+
+# Alternative LLM options (uncomment as needed)
+# anthropic==0.7.7
+google-generativeai==0.3.2
+# langchain==0.1.0
+# langchain-openai==0.0.2
+
+# HTTP client for API calls
+httpx==0.25.2
+aiohttp==3.9.1
+
+# Environment and configuration
+python-dotenv==1.0.0
+
+# Database (optional - uncomment if using database)
+# sqlalchemy==2.0.23
+# alembic==1.13.1
+# asyncpg==0.29.0  # for PostgreSQL
+# aiomysql==0.2.0  # for MySQL
+
+# Logging and monitoring
+structlog==23.2.0
+
+# Testing dependencies
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2  # for testing API endpoints
+
+# Code quality and formatting
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Security
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# CORS and middleware
+# (already included in fastapi)
+
+# Development dependencies
+watchfiles==0.21.0  # for hot reload

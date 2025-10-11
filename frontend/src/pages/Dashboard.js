@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const Dashboard = ({ apiStatus }) => {
+const Dashboard = () => {
   const features = [
     {
       title: "Single File Review",
@@ -11,7 +11,7 @@ const Dashboard = ({ apiStatus }) => {
       icon: "📄",
       path: "/single-file",
       color: "from-blue-500 to-blue-600",
-      disabled: !apiStatus.isConnected,
+      disabled: false,
     },
     {
       title: "Multiple Files Review",
@@ -20,7 +20,7 @@ const Dashboard = ({ apiStatus }) => {
       icon: "📁",
       path: "/multiple-files",
       color: "from-purple-500 to-purple-600",
-      disabled: !apiStatus.isConnected,
+      disabled: false,
     },
   ];
 
@@ -99,21 +99,12 @@ const Dashboard = ({ apiStatus }) => {
               <h3 className="text-2xl font-bold mb-3">{feature.title}</h3>
               <p className="text-blue-100 mb-6">{feature.description}</p>
 
-              {feature.disabled ? (
-                <button
-                  className="bg-white/20 text-white px-6 py-3 rounded-lg font-medium cursor-not-allowed"
-                  disabled
-                >
-                  API Not Connected
-                </button>
-              ) : (
-                <Link
-                  to={feature.path}
-                  className="inline-block bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
-                >
-                  Get Started →
-                </Link>
-              )}
+              <Link
+                to={feature.path}
+                className="inline-block bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors duration-200"
+              >
+                Get Started →
+              </Link>
             </div>
           </div>
         ))}

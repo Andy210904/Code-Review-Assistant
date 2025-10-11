@@ -45,3 +45,10 @@ def setup_logging():
         logging.getLogger("app").setLevel(logging.DEBUG)
     
     return root_logger
+
+
+def get_logger(name: str = None) -> logging.Logger:
+    """Get a logger instance with the specified name."""
+    if name is None:
+        name = __name__
+    return logging.getLogger(name)

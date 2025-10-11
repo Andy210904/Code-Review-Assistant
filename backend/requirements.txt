@@ -28,11 +28,9 @@ aiohttp==3.9.1
 # Environment and configuration
 python-dotenv==1.0.0
 
-# Database (optional - uncomment if using database)
-# sqlalchemy==2.0.23
-# alembic==1.13.1
-# asyncpg==0.29.0  # for PostgreSQL
-# aiomysql==0.2.0  # for MySQL
+# Database - PostgreSQL via PostgREST
+postgrest==0.16.8
+httpx>=0.24.0
 
 # Logging and monitoring
 structlog==23.2.0

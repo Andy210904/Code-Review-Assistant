@@ -88,6 +88,11 @@ class Settings(BaseSettings):
     db_pool_size: int = Field(default=10, alias="DB_POOL_SIZE")
     db_max_overflow: int = Field(default=20, alias="DB_MAX_OVERFLOW")
     
+    # Supabase Configuration
+    supabase_url: Optional[str] = Field(default=None, alias="SUPABASE_URL")
+    supabase_key: Optional[str] = Field(default=None, alias="SUPABASE_KEY")
+    supabase_service_key: Optional[str] = Field(default=None, alias="SUPABASE_SERVICE_KEY")
+    
     # Redis Configuration (Optional)
     redis_url: Optional[str] = Field(default=None, alias="REDIS_URL")
     redis_password: Optional[str] = Field(default=None, alias="REDIS_PASSWORD")

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.api import review_router
+from app.api import history_router
 from app.config import settings
 from app.utils.logging import setup_logging
 import logging
@@ -36,6 +37,12 @@ def create_app() -> FastAPI:
         review_router.router,
         prefix="/api/v1/review",
         tags=["Code Review"]
+    )
+    
+    app.include_router(
+        history_router.router,
+        prefix="/api/v1/history",
+        tags=["Analysis History"]
     )
     
     @app.get("/")

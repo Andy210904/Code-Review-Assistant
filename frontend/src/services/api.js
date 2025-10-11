@@ -90,6 +90,34 @@ export const codeReviewAPI = {
     const response = await api.get("/api/v1/review/analysis-options");
     return response.data;
   },
+
+  // Analysis History methods
+  saveAnalysis: async (analysisData, userId) => {
+    const response = await api.post("/api/v1/history/save", {
+      ...analysisData,
+      user_id: userId,
+    });
+    return response.data;
+  },
+
+  getAnalysisHistory: async (userId) => {
+    const response = await api.get(`/api/v1/history/user/${userId}`);
+    return response.data;
+  },
+
+  getAnalysisById: async (analysisId, userId) => {
+    const response = await api.get(`/api/v1/history/${analysisId}`, {
+      params: { user_id: userId },
+    });
+    return response.data;
+  },
+
+  deleteAnalysis: async (analysisId, userId) => {
+    const response = await api.delete(`/api/v1/history/${analysisId}`, {
+      params: { user_id: userId },
+    });
+    return response.data;
+  },
 };
 
 // Error handling interceptor

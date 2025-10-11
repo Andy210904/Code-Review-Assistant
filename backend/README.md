@@ -13,10 +13,21 @@
    ```bash
    # Copy and edit the environment file
    cp .env.example .env
-   # Add your OpenAI API key to .env
+   # Add your Google API key and Supabase credentials to .env
    ```
 
-3. **Test Configuration**
+3. **Setup Supabase Database**
+
+   ```bash
+   # 1. Create a Supabase project at https://supabase.com
+   # 2. Run the SQL schema from setup_supabase_schema.py in your Supabase SQL editor
+   # 3. Add SUPABASE_URL and SUPABASE_KEY to your .env file
+   
+   # Test the database connection
+   python test_supabase.py
+   ```
+
+4. **Test Configuration**
 
    ```bash
    python start.py
@@ -79,10 +90,13 @@
 ### Environment Variables (.env)
 
 ```env
-# LLM Configuration
-OPENAI_API_KEY=your-openai-api-key-here
-OPENAI_MODEL=gpt-4
-OPENAI_TEMPERATURE=0.3
+# LLM Configuration - Google Gemini (Primary)
+GOOGLE_API_KEY=your-google-api-key-here
+GOOGLE_MODEL=gemini-2.5-flash-lite-preview-09-2025
+
+# Supabase Database Configuration (REQUIRED)
+SUPABASE_URL=your-supabase-project-url-here
+SUPABASE_KEY=your-supabase-anon-key-here
 
 # Server Configuration
 DEBUG=True

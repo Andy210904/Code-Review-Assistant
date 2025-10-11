@@ -108,7 +108,7 @@ const LoadingSpinner = ({ message = "Loading...", size = "default" }) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          AI is analyzing your code...
+          Fetching Your Past Reviews
         </motion.p>
 
         <motion.div
@@ -121,19 +121,19 @@ const LoadingSpinner = ({ message = "Loading...", size = "default" }) => {
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            🔍 Scanning for issues and vulnerabilities
+            🔍 Checking Database
           </motion.p>
           <motion.p
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
           >
-            💡 Generating improvement suggestions
+            💡 Getting Reports
           </motion.p>
           <motion.p
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity, delay: 1 }}
           >
-            📋 Preparing comprehensive report
+            📋 Wait for few minutes
           </motion.p>
         </motion.div>
       </div>

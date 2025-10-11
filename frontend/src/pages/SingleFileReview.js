@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { codeReviewAPI } from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
 import FileUpload from "../components/FileUpload";
 import ReviewResults from "../components/ReviewResults";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const SingleFileReview = () => {
+  const { user } = useAuth();
   const [file, setFile] = useState(null);
   const [reviewResults, setReviewResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,6 +31,36 @@ const SingleFileReview = () => {
       const result = await codeReviewAPI.reviewSingleFile(file);
       console.log("SingleFileReview: API result received:", result);
       setReviewResults(result);
+
+      // Save analysis to history (only if user is authenticated)
+      if (user && result) {
+        try {
+          const analysisData = {
+            filename: file.name,
+            fileType: "single",
+            summary:
+              result.data?.summary ||
+              result.summary ||
+              "Code analysis completed",
+            results: result,
+            qualityScore:
+              result.data?.quality_score || result.quality_score || 0,
+            securityScore:
+              result.data?.security_score || result.security_score || 0,
+            performanceScore:
+              result.data?.performance_score || result.performance_score || 0,
+            issues: result.data?.issues || result.issues || [],
+            createdAt: new Date().toISOString(),
+          };
+
+          await codeReviewAPI.saveAnalysis(analysisData, user.id);
+          console.log("Analysis saved to history successfully");
+        } catch (saveError) {
+          console.warn("Failed to save analysis to history:", saveError);
+          // Don't show error to user as this is not critical for the main flow
+        }
+      }
+
       console.log(
         "SingleFileReview: Review results set, component should re-render"
       );

@@ -14,13 +14,29 @@ const MultipleFileReview = () => {
   const [loading, setLoading] = useState(false);
 
   const handleFilesSelect = (selectedFiles) => {
-    setFiles(selectedFiles);
+    const maxFiles = 3;
+    if (selectedFiles && selectedFiles.length > maxFiles) {
+      toast.error(
+        `Maximum ${maxFiles} files allowed for analysis to ensure optimal LLM performance.`
+      );
+      setFiles(selectedFiles.slice(0, maxFiles));
+    } else {
+      setFiles(selectedFiles);
+    }
     setReviewResults(null);
   };
 
   const handleReview = async () => {
     if (!files || files.length === 0) {
       toast.error("Please select at least one file");
+      return;
+    }
+
+    const maxFiles = 3;
+    if (files.length > maxFiles) {
+      toast.error(
+        `Maximum ${maxFiles} files allowed for analysis. Please remove some files.`
+      );
       return;
     }
 

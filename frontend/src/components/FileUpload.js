@@ -6,7 +6,18 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
   const onDrop = useCallback(
     (acceptedFiles) => {
       if (multiple) {
-        onFileSelect(acceptedFiles);
+        const maxFiles = 3;
+        if (acceptedFiles.length > maxFiles) {
+          // Show error for exceeding file limit
+          import("react-hot-toast").then((toast) => {
+            toast.default.error(
+              `Maximum ${maxFiles} files allowed. Only the first ${maxFiles} files will be selected.`
+            );
+          });
+          onFileSelect(acceptedFiles.slice(0, maxFiles));
+        } else {
+          onFileSelect(acceptedFiles);
+        }
       } else {
         onFileSelect(acceptedFiles[0]);
       }
@@ -194,7 +205,7 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 Max file size: 10MB{" "}
-                {multiple ? "• Multiple files allowed" : "• Single file only"}
+                {multiple ? "• Maximum 3 files allowed" : "• Single file only"}
               </p>
             </div>
           )}

@@ -91,6 +91,14 @@ async def review_multiple_files(
                 detail="No files provided"
             )
         
+        # Enforce file limit to prevent LLM prompt overload
+        max_files = 3
+        if len(files) > max_files:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Maximum {max_files} files allowed for analysis. Current request has {len(files)} files."
+            )
+        
         file_reviews = []
         
         # Process each file

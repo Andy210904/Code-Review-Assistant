@@ -22,7 +22,7 @@
    # 1. Create a Supabase project at https://supabase.com
    # 2. Run the SQL schema from setup_supabase_schema.py in your Supabase SQL editor
    # 3. Add SUPABASE_URL and SUPABASE_KEY to your .env file
-   
+
    # Test the database connection
    python test_supabase.py
    ```
@@ -33,7 +33,7 @@
    python start.py
    ```
 
-4. **Start the API Server**
+5. **Start the API Server**
 
    ```bash
    # Development (with auto-reload)
@@ -43,7 +43,7 @@
    python app/main.py
    ```
 
-5. **Access API Documentation**
+6. **Access API Documentation**
    - Swagger UI: http://localhost:8000/docs
    - ReDoc: http://localhost:8000/redoc
    - Health Check: http://localhost:8000/health

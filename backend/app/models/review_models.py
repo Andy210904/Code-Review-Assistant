@@ -81,6 +81,8 @@ class EnhancedProjectSummary(BaseModel):
     total_files: int = Field(..., description="Total number of files reviewed")
     languages_detected: List[str] = Field(..., description="List of programming languages found")
     average_score: float = Field(..., description="Average quality score (100-point scale)")
+    security_score: float = Field(default=80.0, description="Average security score (100-point scale)")
+    performance_score: float = Field(default=75.0, description="Average performance score (100-point scale)")
     critical_issues: int = Field(..., description="Number of critical issues found")
     high_issues: int = Field(..., description="Number of high priority issues found")
     medium_issues: int = Field(..., description="Number of medium priority issues found")

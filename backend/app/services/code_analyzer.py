@@ -811,7 +811,9 @@ class CodeAnalyzer:
             return EnhancedProjectSummary(
                 total_files=len(file_reviews),
                 languages_detected=list(llm_summary.get("languages_analysis", {}).keys()),
-                average_score=llm_summary.get("project_quality_score", 70.0),
+                average_score=llm_summary.get("average_score", 70.0),
+                security_score=llm_summary.get("security_score", 80.0),
+                performance_score=llm_summary.get("performance_score", 75.0),
                 critical_issues=llm_summary.get("critical_issues_count", 0),
                 high_issues=llm_summary.get("high_issues_count", 0),
                 medium_issues=llm_summary.get("medium_issues_count", 0),

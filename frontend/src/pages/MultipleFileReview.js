@@ -61,11 +61,20 @@ const MultipleFileReview = () => {
               "Multi-file code analysis completed",
             results: result,
             qualityScore:
-              result.data?.quality_score || result.quality_score || 0,
+              result.enhanced_project_summary?.average_score ||
+              result.data?.quality_score ||
+              result.quality_score ||
+              0,
             securityScore:
-              result.data?.security_score || result.security_score || 0,
+              result.enhanced_project_summary?.security_score ||
+              result.data?.security_score ||
+              result.security_score ||
+              0,
             performanceScore:
-              result.data?.performance_score || result.performance_score || 0,
+              result.enhanced_project_summary?.performance_score ||
+              result.data?.performance_score ||
+              result.performance_score ||
+              0,
             issues: result.data?.issues || result.issues || [],
             createdAt: new Date().toISOString(),
             fileCount: files.length,

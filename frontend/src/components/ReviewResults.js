@@ -627,7 +627,7 @@ const ReviewResults = ({ results }) => {
             </div>
             <div className="text-center p-3 bg-green-50 rounded-lg">
               <div className="text-2xl font-bold text-green-600">
-                {analysisData.lines_of_code || 0}
+                {analysisData.total_lines || 0}
               </div>
               <div className="text-sm text-gray-600">Total Lines</div>
             </div>

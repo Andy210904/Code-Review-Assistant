@@ -50,7 +50,7 @@ Return JSON in this exact format:
     "best_practices_score": 72,
     "security_score": 90,
     "performance_score": 80,
-    "lines_of_code": 120,
+    "total_lines": 120,
     "function_count": 5,
     "readability_analysis": {{
         "variable_naming": "Assessment of variable and function names",
@@ -319,7 +319,9 @@ Return JSON in this exact format:
     "languages_analysis": {{
         "language_name": "usage_percentage_and_quality_notes"
     }},
-    "project_quality_score": 85,
+    "average_score": 85,
+    "security_score": 80,
+    "performance_score": 75,
     "critical_issues_count": 2,
     "high_issues_count": 5,
     "medium_issues_count": 8,
@@ -395,7 +397,7 @@ Return JSON in this EXACT format (field names must match exactly):
     "best_practices_score": 72,
     "security_score": 90,
     "performance_score": 80,
-    "lines_of_code": 120,
+    "total_lines": 120,
     "function_count": 5,
     "readability_analysis": {{
         "variable_naming": "Assessment of variable and function names",

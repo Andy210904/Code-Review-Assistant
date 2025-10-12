@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../contexts/AuthContext";
 import { codeReviewAPI } from "../services/api";
 import ReviewResults from "../components/ReviewResults";
+import MultipleFileResults from "../components/MultipleFileResults";
 import LoadingSpinner from "../components/Load_past";
 
 const History = () => {
@@ -326,7 +327,11 @@ const History = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <ReviewResults results={selectedAnalysis.results} />
+          {selectedAnalysis.fileType === "multiple" ? (
+            <MultipleFileResults results={selectedAnalysis.results} />
+          ) : (
+            <ReviewResults results={selectedAnalysis.results} />
+          )}
         </motion.div>
       </div>
     );

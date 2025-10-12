@@ -7,22 +7,28 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
     (acceptedFiles) => {
       if (multiple) {
         const maxFiles = 3;
-        if (acceptedFiles.length > maxFiles) {
+        // Get existing files (selectedFile should be an array for multiple mode)
+        const existingFiles = Array.isArray(selectedFile) ? selectedFile : [];
+        
+        // Combine existing files with new ones
+        const allFiles = [...existingFiles, ...acceptedFiles];
+        
+        if (allFiles.length > maxFiles) {
           // Show error for exceeding file limit
           import("react-hot-toast").then((toast) => {
             toast.default.error(
-              `Maximum ${maxFiles} files allowed. Only the first ${maxFiles} files will be selected.`
+              `Maximum ${maxFiles} files allowed. ${allFiles.length - maxFiles} file(s) were not added.`
             );
           });
-          onFileSelect(acceptedFiles.slice(0, maxFiles));
+          onFileSelect(allFiles.slice(0, maxFiles));
         } else {
-          onFileSelect(acceptedFiles);
+          onFileSelect(allFiles);
         }
       } else {
         onFileSelect(acceptedFiles[0]);
       }
     },
-    [onFileSelect, multiple]
+    [onFileSelect, multiple, selectedFile]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -100,18 +106,25 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
     return iconMap[extension] || "📄";
   };
 
+  const removeFile = (indexToRemove) => {
+    if (multiple && Array.isArray(selectedFile)) {
+      const updatedFiles = selectedFile.filter((_, index) => index !== indexToRemove);
+      onFileSelect(updatedFiles);
+    }
+  };
+
   const renderSelectedFiles = () => {
     if (multiple && Array.isArray(selectedFile) && selectedFile.length > 0) {
       return (
         <div className="mt-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
-            Selected Files ({selectedFile.length})
+            Selected Files ({selectedFile.length}/3)
           </h3>
           <div className="space-y-2 max-h-40 overflow-y-auto">
             {selectedFile.map((file, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg"
+                className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <span className="text-2xl">{getFileIcon(file.name)}</span>
                 <div className="flex-1 min-w-0">
@@ -122,9 +135,26 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
                     {formatFileSize(file.size)}
                   </p>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(index);
+                  }}
+                  className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors"
+                  title="Remove file"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
             ))}
           </div>
+          {selectedFile.length < 3 && (
+            <p className="text-sm text-blue-600 mt-2">
+              💡 You can add {3 - selectedFile.length} more file(s) by clicking browse again or drag & drop
+            </p>
+          )}
         </div>
       );
     }

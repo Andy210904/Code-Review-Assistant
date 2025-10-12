@@ -9,15 +9,17 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
         const maxFiles = 3;
         // Get existing files (selectedFile should be an array for multiple mode)
         const existingFiles = Array.isArray(selectedFile) ? selectedFile : [];
-        
+
         // Combine existing files with new ones
         const allFiles = [...existingFiles, ...acceptedFiles];
-        
+
         if (allFiles.length > maxFiles) {
           // Show error for exceeding file limit
           import("react-hot-toast").then((toast) => {
             toast.default.error(
-              `Maximum ${maxFiles} files allowed. ${allFiles.length - maxFiles} file(s) were not added.`
+              `Maximum ${maxFiles} files allowed. ${
+                allFiles.length - maxFiles
+              } file(s) were not added.`
             );
           });
           onFileSelect(allFiles.slice(0, maxFiles));
@@ -108,7 +110,9 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
 
   const removeFile = (indexToRemove) => {
     if (multiple && Array.isArray(selectedFile)) {
-      const updatedFiles = selectedFile.filter((_, index) => index !== indexToRemove);
+      const updatedFiles = selectedFile.filter(
+        (_, index) => index !== indexToRemove
+      );
       onFileSelect(updatedFiles);
     }
   };
@@ -143,8 +147,18 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
                   className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-colors"
                   title="Remove file"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -152,7 +166,8 @@ const FileUpload = ({ onFileSelect, selectedFile, multiple = false }) => {
           </div>
           {selectedFile.length < 3 && (
             <p className="text-sm text-blue-600 mt-2">
-              💡 You can add {3 - selectedFile.length} more file(s) by clicking browse again or drag & drop
+              💡 You can add {3 - selectedFile.length} more file(s) by clicking
+              browse again or drag & drop
             </p>
           )}
         </div>

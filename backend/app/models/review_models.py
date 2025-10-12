@@ -67,3 +67,34 @@ class FileInfo(BaseModel):
     language: str = Field(..., description="Detected programming language")
     size_bytes: int = Field(..., description="File size in bytes")
     encoding: str = Field(default="utf-8", description="File encoding")
+
+# NEW MODELS FOR ENHANCED MULTIPLE FILE ANALYSIS (ADDITION ONLY - DO NOT TOUCH EXISTING)
+class FileRelationship(BaseModel):
+    """Model for relationship between two files."""
+    file1: str = Field(..., description="First file name")
+    file2: str = Field(..., description="Second file name")
+    relationship_type: str = Field(..., description="Type of relationship: imports, calls, inherits, configures, tests, data_flow")
+    description: str = Field(..., description="Description of the relationship")
+
+class EnhancedProjectSummary(BaseModel):
+    """Enhanced project summary with relationship analysis."""
+    total_files: int = Field(..., description="Total number of files reviewed")
+    languages_detected: List[str] = Field(..., description="List of programming languages found")
+    average_score: float = Field(..., description="Average quality score across all files (100-point scale)")
+    critical_issues: int = Field(..., description="Number of critical issues found")
+    high_issues: int = Field(..., description="Number of high severity issues")
+    medium_issues: int = Field(..., description="Number of medium severity issues")
+    low_issues: int = Field(..., description="Number of low severity issues")
+    key_recommendations: List[str] = Field(default_factory=list, description="Key project-level recommendations")
+    relationships: List[FileRelationship] = Field(default_factory=list, description="Relationships between files")
+    relationship_summary: str = Field(..., description="Overall description of how files work together")
+    architecture_overview: str = Field(..., description="High-level description of project architecture")
+
+class MultipleFileReviewResponse(BaseModel):
+    """Response model for enhanced multiple file review."""
+    success: bool = Field(..., description="Whether the operation was successful")
+    message: str = Field(..., description="Response message")
+    file_reviews: List[FileReviewResponse] = Field(..., description="Individual file review results")
+    enhanced_project_summary: EnhancedProjectSummary = Field(..., description="Enhanced project summary with relationships")
+    total_files: int = Field(..., description="Total number of files processed")
+    successful_reviews: int = Field(..., description="Number of successfully reviewed files")

@@ -3,7 +3,8 @@ import logging
 import json
 from datetime import datetime
 from app.models.review_models import (
-    CodeReview, CodeIssue, CodeMetrics, ProjectSummary, FileReviewResponse
+    CodeReview, CodeIssue, CodeMetrics, ProjectSummary, FileReviewResponse,
+    EnhancedProjectSummary, FileRelationship, MultipleFileReviewResponse
 )
 from app.services.llm_client import LLMClientFactory
 from app.services.prompt_templates import PromptTemplates
@@ -748,3 +749,175 @@ class CodeAnalyzer:
         ]
         
         return analysis
+    
+    # NEW METHOD FOR ENHANCED MULTIPLE FILE ANALYSIS (ADDITION ONLY)
+    async def generate_enhanced_project_summary(
+        self, 
+        file_reviews: List[FileReviewResponse]
+    ) -> EnhancedProjectSummary:
+        """Generate enhanced project summary with relationship analysis for multiple files."""
+        from ..models.review_models import EnhancedProjectSummary, FileRelationship
+        
+        successful_reviews = [fr for fr in file_reviews if fr.review is not None]
+        
+        if not successful_reviews:
+            return EnhancedProjectSummary(
+                total_files=len(file_reviews),
+                languages_detected=[],
+                average_score=0.0,
+                critical_issues=0,
+                high_issues=0,
+                medium_issues=0,
+                low_issues=0,
+                key_recommendations=["No files could be successfully analyzed"],
+                relationships=[],
+                relationship_summary="No relationships could be analyzed due to failed file reviews.",
+                architecture_overview="Architecture analysis unavailable - no files successfully reviewed."
+            )
+        
+        try:
+            # Prepare enhanced data for LLM analysis with file content snippets
+            enhanced_review_data = []
+            for fr in successful_reviews:
+                enhanced_review_data.append({
+                    "filename": fr.filename,
+                    "language": fr.language,
+                    "overall_score": fr.review.overall_score,
+                    "readability_score": fr.review.readability_score,
+                    "maintainability_score": fr.review.maintainability_score,
+                    "issues_count": len(fr.review.issues),
+                    "critical_issues": len([i for i in fr.review.issues if i.severity == 'critical']),
+                    "high_issues": len([i for i in fr.review.issues if i.severity == 'high']),
+                    "summary": fr.review.summary,
+                    "suggestions": fr.review.suggestions[:3]
+                })
+            
+            # Generate enhanced LLM analysis with relationships
+            prompt = self.prompt_templates.get_enhanced_project_summary_prompt(enhanced_review_data)
+            llm_response = await self.llm_client.generate_response(prompt)
+            llm_summary = json.loads(llm_response)
+            
+            # Parse relationships
+            relationships = []
+            for rel_data in llm_summary.get("relationships", []):
+                relationships.append(FileRelationship(
+                    file1=rel_data.get("file1", ""),
+                    file2=rel_data.get("file2", ""),
+                    relationship_type=rel_data.get("relationship_type", "unknown"),
+                    description=rel_data.get("description", "")
+                ))
+            
+            # Extract enhanced data from LLM response
+            return EnhancedProjectSummary(
+                total_files=len(file_reviews),
+                languages_detected=list(llm_summary.get("languages_analysis", {}).keys()),
+                average_score=llm_summary.get("project_quality_score", 70.0),
+                critical_issues=llm_summary.get("critical_issues_count", 0),
+                high_issues=llm_summary.get("high_issues_count", 0),
+                medium_issues=llm_summary.get("medium_issues_count", 0),
+                low_issues=llm_summary.get("low_issues_count", 0),
+                key_recommendations=llm_summary.get("key_recommendations", [])[:5],
+                relationships=relationships,
+                relationship_summary=llm_summary.get("relationship_summary", "No relationship analysis available."),
+                architecture_overview=llm_summary.get("architecture_overview", "Architecture analysis not available.")
+            )
+            
+        except Exception as e:
+            logger.error(f"Failed to generate enhanced project summary: {str(e)}")
+            # Fallback to basic summary structure with enhanced fields
+            basic_summary = await self.generate_project_summary(file_reviews)
+            return EnhancedProjectSummary(
+                total_files=basic_summary.total_files,
+                languages_detected=basic_summary.languages_detected,
+                average_score=basic_summary.average_score * 10,  # Convert to 100-point scale
+                critical_issues=basic_summary.critical_issues,
+                high_issues=basic_summary.high_issues,
+                medium_issues=basic_summary.medium_issues,
+                low_issues=basic_summary.low_issues,
+                key_recommendations=basic_summary.key_recommendations,
+                relationships=[],
+                relationship_summary="Relationship analysis failed, but basic analysis completed successfully.",
+                architecture_overview="Architecture analysis not available due to processing error."
+            )
+    
+    # NEW METHOD FOR INDIVIDUAL FILE ANALYSIS IN MULTIPLE FILE CONTEXT (ADDITION ONLY)
+    async def analyze_code_for_multiple_files(
+        self,
+        code_content: str,
+        language: str,
+        filename: str,
+        include_suggestions: bool = True,
+        analysis_depth: str = "standard"
+    ) -> Optional[CodeReview]:
+        """Analyze individual code file specifically for multiple file reviews with correct field names."""
+        
+        try:
+            logger.info(f"Analyzing code file for multiple files context: {filename} (Language: {language})")
+            
+            # Use the NEW prompt template for multiple file individual analysis
+            prompt = self.prompt_templates.get_multiple_file_individual_analysis_prompt(
+                code=code_content,
+                language=language,
+                filename=filename,
+                analysis_depth=analysis_depth
+            )
+            
+            # Get response from LLM
+            response = await self.llm_client.generate_response(prompt)
+            logger.debug(f"Raw LLM response: {response[:500]}...")
+            logger.debug(f"Raw LLM response length: {len(response)} chars")
+            
+            # Clean and parse response using existing method
+            parsed_response = self._parse_llm_json_response(response)
+            logger.debug("Successfully parsed JSON response")
+            
+            # Create CodeReview object with the correct field mapping including required fields
+            code_review = CodeReview(
+                filename=filename,  # Required field
+                language=language,  # Required field
+                summary=parsed_response.get("summary", "Analysis completed"),
+                overall_score=int(parsed_response.get("overall_score", 70)),
+                readability_score=int(parsed_response.get("readability_score", 70)),
+                maintainability_score=int(parsed_response.get("maintainability_score", 70)),
+                complexity_score=int(parsed_response.get("complexity_score", 5)),
+                comment_ratio=float(parsed_response.get("comment_ratio", 0.0)),
+                best_practices_score=int(parsed_response.get("best_practices_score", 70)),
+                security_score=int(parsed_response.get("security_score", 80)),
+                performance_score=int(parsed_response.get("performance_score", 75)),
+                
+                # Parse issues with correct field names (issue_type, message)
+                issues=[
+                    CodeIssue(
+                        issue_type=issue.get("issue_type", "General"),
+                        severity=issue.get("severity", "medium"),
+                        line=issue.get("line", 0),
+                        title=issue.get("title", "Issue found"),
+                        message=issue.get("message", "Issue description"),
+                        suggestion=issue.get("suggestion", "Consider reviewing this code")
+                    )
+                    for issue in parsed_response.get("issues", [])
+                ],
+                
+                suggestions=parsed_response.get("suggestions", []),
+                strengths=parsed_response.get("strengths", []),
+                
+                # Parse metrics with correct field names
+                metrics=CodeMetrics(
+                    lines_of_code=int(parsed_response.get("total_lines", len(code_content.split('\n')))),
+                    cyclomatic_complexity=parsed_response.get("complexity_score"),
+                    maintainability_index=parsed_response.get("maintainability_score"),
+                    code_duplication=parsed_response.get("code_duplication")
+                )
+            )
+            
+            logger.info(f"Successfully analyzed {filename} for multiple files context")
+            return code_review
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error for {filename}: {str(e)}")
+            logger.debug(f"Raw response that failed to parse: {response}")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error analyzing code for multiple files context {filename}: {str(e)}")
+            return None

@@ -79,6 +79,44 @@ export const codeReviewAPI = {
     return response.data;
   },
 
+  // NEW METHOD: Review multiple files with enhanced relationship analysis
+  reviewMultipleFilesEnhanced: async (files, options = {}) => {
+    console.log("API: Starting enhanced multiple files review", {
+      fileCount: files.length,
+      options,
+    });
+
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    if (options.analysisDepth) {
+      formData.append("analysis_depth", options.analysisDepth);
+    }
+
+    if (options.includeSuggestions !== undefined) {
+      formData.append(
+        "include_suggestions",
+        options.includeSuggestions.toString()
+      );
+    }
+
+    const response = await api.post(
+      "/api/v1/review/multiple-files/enhanced",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    console.log("API: Enhanced multiple files review completed", response.data);
+    return response.data;
+  },
+
   // Get supported languages
   getSupportedLanguages: async () => {
     const response = await api.get("/api/v1/review/supported-languages");

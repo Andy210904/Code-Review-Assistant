@@ -50,7 +50,7 @@ Return JSON in this exact format:
     "best_practices_score": 72,
     "security_score": 90,
     "performance_score": 80,
-    "lines_of_code": 120,
+    "total_lines": 120,
     "function_count": 5,
     "readability_analysis": {{
         "variable_naming": "Assessment of variable and function names",
@@ -395,7 +395,7 @@ Return JSON in this EXACT format (field names must match exactly):
     "best_practices_score": 72,
     "security_score": 90,
     "performance_score": 80,
-    "lines_of_code": 120,
+    "total_lines": 120,
     "function_count": 5,
     "readability_analysis": {{
         "variable_naming": "Assessment of variable and function names",

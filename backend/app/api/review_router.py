@@ -4,7 +4,7 @@ from typing import List, Optional
 import logging
 from app.services.code_analyzer import CodeAnalyzer
 from app.services.file_handler import FileHandler
-from app.models.review_models import ReviewRequest, ReviewResponse, FileReviewResponse
+from app.models.review_models import ReviewRequest, ReviewResponse, FileReviewResponse, MultipleFileReviewResponse
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -151,6 +151,93 @@ async def review_multiple_files(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to review files: {str(e)}"
+        )
+
+# NEW ENHANCED MULTIPLE FILES ENDPOINT (ADDITION ONLY)
+@router.post("/multiple-files/enhanced", response_model=MultipleFileReviewResponse)
+async def review_multiple_files_enhanced(
+    files: List[UploadFile] = File(...),
+    include_suggestions: bool = True,
+    analysis_depth: str = "standard"
+):
+    """
+    Enhanced review of multiple source code files with relationship analysis.
+    
+    Args:
+        files: List of source code files to review
+        include_suggestions: Whether to include improvement suggestions
+        analysis_depth: Level of analysis - 'basic', 'standard', or 'detailed'
+    
+    Returns:
+        MultipleFileReviewResponse: Enhanced review report with file relationships
+    """
+    try:
+        logger.info(f"Enhanced reviewing {len(files)} files")
+        
+        if not files:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No files provided"
+            )
+        
+        # Enforce file limit to prevent LLM prompt overload
+        max_files = 3
+        if len(files) > max_files:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Maximum {max_files} files allowed for enhanced analysis. Current request has {len(files)} files."
+            )
+        
+        file_reviews = []
+        
+        # Process each file (enhanced analysis with correct field names)
+        for file in files:
+            try:
+                # Process file
+                file_info = await file_handler.process_uploaded_file(file)
+                
+                # Analyze code using NEW method for multiple files with correct field names
+                review_result = await code_analyzer.analyze_code_for_multiple_files(
+                    code_content=file_info.content,
+                    language=file_info.language,
+                    filename=file_info.filename,
+                    include_suggestions=include_suggestions,
+                    analysis_depth=analysis_depth
+                )
+                
+                file_reviews.append(FileReviewResponse(
+                    filename=file_info.filename,
+                    language=file_info.language,
+                    review=review_result
+                ))
+                
+            except Exception as e:
+                logger.error(f"Error processing file {file.filename}: {str(e)}")
+                # Continue with other files, but log the error
+                file_reviews.append(FileReviewResponse(
+                    filename=file.filename,
+                    language="unknown",
+                    review=None,
+                    error=str(e)
+                ))
+        
+        # Generate ENHANCED summary with relationships
+        enhanced_summary = await code_analyzer.generate_enhanced_project_summary(file_reviews)
+        
+        return MultipleFileReviewResponse(
+            success=True,
+            message=f"Successfully reviewed {len(file_reviews)} files with enhanced analysis",
+            file_reviews=file_reviews,
+            enhanced_project_summary=enhanced_summary,
+            total_files=len(files),
+            successful_reviews=len([fr for fr in file_reviews if fr.review is not None])
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in enhanced multiple files review: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to perform enhanced review: {str(e)}"
         )
 
 @router.get("/supported-languages")

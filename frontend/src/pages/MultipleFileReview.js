@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { codeReviewAPI } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import FileUpload from "../components/FileUpload";
-import ReviewResults from "../components/ReviewResults";
+import MultipleFileResults from "../components/MultipleFileResults";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const MultipleFileReview = () => {
@@ -42,7 +42,8 @@ const MultipleFileReview = () => {
 
     setLoading(true);
     try {
-      const result = await codeReviewAPI.reviewMultipleFiles(files);
+      // Use enhanced multiple file analysis with relationship detection
+      const result = await codeReviewAPI.reviewMultipleFilesEnhanced(files);
       setReviewResults(result);
 
       // Save analysis to history (only if user is authenticated)
@@ -249,7 +250,7 @@ const MultipleFileReview = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <ReviewResults results={reviewResults} />
+          <MultipleFileResults results={reviewResults} />
         </motion.div>
       )}
     </div>

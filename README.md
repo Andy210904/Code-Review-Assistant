@@ -1,5 +1,6 @@
+# Code Review Assistant
+
 <div align = "center">
-    # Code Review Assistant
     <h3>AI-Powered Code Review and Analysis Tool</h3>
     <p>Enhance your code quality with intelligent analysis, suggestions, and comprehensive reporting</p>
 </div>

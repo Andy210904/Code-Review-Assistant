@@ -420,10 +420,6 @@ We welcome contributions to the Code Review Assistant! Here's how you can help:
 - 🔧 **Performance**: Optimize analysis speed and accuracy
 - 📚 **Documentation**: Improve documentation and add tutorials
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - **Gemini AI** for providing the LLM capabilities

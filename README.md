@@ -1,23 +1,7 @@
 # Code Review Assistant
 
-<div align="center">
-  <h3>🔍 AI-Powered Code Review and Analysis Tool</h3>
-  <p>Enhance your code quality with intelligent analysis, suggestions, and comprehensive reporting</p>
-</div>
-
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [API Documentation](#api-documentation)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
+<h3>AI-Powered Code Review and Analysis Tool</h3>
+<p>Enhance your code quality with intelligent analysis, suggestions, and comprehensive reporting</p>
 
 ## 🌟 Overview
 

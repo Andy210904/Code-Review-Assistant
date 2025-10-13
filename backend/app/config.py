@@ -27,16 +27,11 @@ class Settings(BaseSettings):
     
     # CORS Configuration
     allowed_origins: List[str] = Field(
-        default=["http://localhost:3000"], 
+        default=["http://localhost:3000","http://code-review-assistant-one.vercel.app/","https://code-review-assistant-one.vercel.app/","https://code-review-assistant-git-master-andy210904s-projects.vercel.app/","https://code-review-assistant-oztcbu4wb-andy210904s-projects.vercel.app/"], 
         alias="ALLOWED_ORIGINS"
     )
     allow_credentials: bool = Field(default=True, alias="ALLOW_CREDENTIALS")
     
-    # LLM Configuration - OpenAI (Primary)
-    openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY")
-    openai_model: str = Field(default="gpt-4", alias="OPENAI_MODEL")
-    openai_max_tokens: int = Field(default=2000, alias="OPENAI_MAX_TOKENS")
-    openai_temperature: float = Field(default=0.3, alias="OPENAI_TEMPERATURE")
     
     # Alternative LLM Providers
     anthropic_api_key: Optional[str] = Field(default=None, alias="ANTHROPIC_API_KEY")

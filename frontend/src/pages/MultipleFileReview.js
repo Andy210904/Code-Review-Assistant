@@ -75,7 +75,11 @@ const MultipleFileReview = () => {
               result.data?.performance_score ||
               result.performance_score ||
               0,
-            issues: result.data?.issues || result.issues || [],
+            issues: result.file_reviews
+              ? result.file_reviews.flatMap(
+                  (fileReview) => fileReview.review?.issues || []
+                )
+              : result.data?.issues || result.issues || [],
             createdAt: new Date().toISOString(),
             fileCount: files.length,
             fileNames: files.map((f) => f.name),

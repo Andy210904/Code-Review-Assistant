@@ -807,6 +807,16 @@ class CodeAnalyzer:
                     description=rel_data.get("description", "")
                 ))
             
+            # Calculate actual issue counts from file reviews
+            all_issues = []
+            for fr in successful_reviews:
+                all_issues.extend(fr.review.issues)
+            
+            critical_count = len([i for i in all_issues if i.severity == 'critical'])
+            high_count = len([i for i in all_issues if i.severity == 'high'])
+            medium_count = len([i for i in all_issues if i.severity == 'medium'])
+            low_count = len([i for i in all_issues if i.severity == 'low'])
+            
             # Extract enhanced data from LLM response
             return EnhancedProjectSummary(
                 total_files=len(file_reviews),
@@ -814,10 +824,10 @@ class CodeAnalyzer:
                 average_score=llm_summary.get("average_score", 70.0),
                 security_score=llm_summary.get("security_score", 80.0),
                 performance_score=llm_summary.get("performance_score", 75.0),
-                critical_issues=llm_summary.get("critical_issues_count", 0),
-                high_issues=llm_summary.get("high_issues_count", 0),
-                medium_issues=llm_summary.get("medium_issues_count", 0),
-                low_issues=llm_summary.get("low_issues_count", 0),
+                critical_issues=critical_count,
+                high_issues=high_count,
+                medium_issues=medium_count,
+                low_issues=low_count,
                 key_recommendations=llm_summary.get("key_recommendations", [])[:5],
                 relationships=relationships,
                 relationship_summary=llm_summary.get("relationship_summary", "No relationship analysis available."),

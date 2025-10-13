@@ -1,7 +1,8 @@
-# Code Review Assistant
-
-<h3>AI-Powered Code Review and Analysis Tool</h3>
-<p>Enhance your code quality with intelligent analysis, suggestions, and comprehensive reporting</p>
+<div align = "center">
+    # Code Review Assistant
+    <h3>AI-Powered Code Review and Analysis Tool</h3>
+    <p>Enhance your code quality with intelligent analysis, suggestions, and comprehensive reporting</p>
+</div>
 
 ## 🌟 Overview
 
@@ -428,7 +429,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Supabase** for the backend infrastructure
 - **FastAPI** and **React** communities for excellent frameworks
 - **Tailwind CSS** for the utility-first CSS framework
-- All contributors and users of this project
 
 ## 📞 Support
 
@@ -437,7 +437,6 @@ If you encounter any issues or have questions:
 1. **Check the Issues**: Look through existing GitHub issues
 2. **Create an Issue**: Report bugs or request features
 3. **Documentation**: Review the API documentation at `/docs`
-4. **Community**: Join discussions in the repository
 
 ---
 

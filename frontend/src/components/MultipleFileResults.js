@@ -74,34 +74,276 @@ const MultipleFileResults = ({ results }) => {
   const downloadPDF = () => {
     try {
       const doc = new jsPDF();
+      let yPos = 20;
+      const pageHeight = doc.internal.pageSize.height;
+      const margin = 20;
+      const lineHeight = 6;
+
+      // Helper function to add new page if needed
+      const checkPageBreak = (neededSpace = 20) => {
+        if (yPos + neededSpace > pageHeight - margin) {
+          doc.addPage();
+          yPos = margin;
+        }
+      };
+
+      // Helper function to add wrapped text
+      const addWrappedText = (text, maxWidth = 170) => {
+        const lines = doc.splitTextToSize(text, maxWidth);
+        lines.forEach((line) => {
+          checkPageBreak();
+          doc.text(line, margin, yPos);
+          yPos += lineHeight;
+        });
+      };
 
       // Title
       doc.setFontSize(20);
-      doc.text("Multiple Files Code Review Report", 20, 20);
+      doc.setFont(undefined, "bold");
+      doc.text("Multiple Files Code Review Report", margin, yPos);
+      yPos += 15;
 
-      // Project Summary
-      doc.setFontSize(14);
-      doc.text(`Files Analyzed: ${project_summary.total_files}`, 20, 40);
+      // Generated date
+      doc.setFontSize(10);
+      doc.setFont(undefined, "normal");
+      doc.text(`Generated on: ${new Date().toLocaleString()}`, margin, yPos);
+      yPos += 15;
+
+      // Project Overview Section
+      checkPageBreak(40);
+      doc.setFontSize(16);
+      doc.setFont(undefined, "bold");
+      doc.text("Project Overview", margin, yPos);
+      yPos += 10;
+
+      doc.setFontSize(12);
+      doc.setFont(undefined, "normal");
+      doc.text(`Files Analyzed: ${project_summary.total_files}`, margin, yPos);
+      yPos += lineHeight;
       doc.text(
         `Languages: ${project_summary.languages_detected.join(", ")}`,
-        20,
-        50
+        margin,
+        yPos
       );
+      yPos += lineHeight;
       doc.text(
         `Average Score: ${Math.round(project_summary.average_score)}/100`,
-        20,
-        60
+        margin,
+        yPos
       );
+      yPos += lineHeight;
+      doc.text(
+        `Total Issues: ${
+          project_summary.critical_issues +
+          project_summary.high_issues +
+          project_summary.medium_issues +
+          project_summary.low_issues
+        }`,
+        margin,
+        yPos
+      );
+      yPos += 15;
 
       // Issues Summary
-      let yPos = 80;
-      doc.text("Issues Summary:", 20, yPos);
-      doc.text(`Critical: ${project_summary.critical_issues}`, 30, yPos + 10);
-      doc.text(`High: ${project_summary.high_issues}`, 30, yPos + 20);
-      doc.text(`Medium: ${project_summary.medium_issues}`, 30, yPos + 30);
-      doc.text(`Low: ${project_summary.low_issues}`, 30, yPos + 40);
+      checkPageBreak(30);
+      doc.setFontSize(14);
+      doc.setFont(undefined, "bold");
+      doc.text("Issues Summary", margin, yPos);
+      yPos += 10;
 
-      doc.save("multiple-files-review-report.pdf");
+      doc.setFontSize(12);
+      doc.setFont(undefined, "normal");
+      doc.text(
+        `Critical Issues: ${project_summary.critical_issues}`,
+        margin + 10,
+        yPos
+      );
+      yPos += lineHeight;
+      doc.text(
+        `High Priority: ${project_summary.high_issues}`,
+        margin + 10,
+        yPos
+      );
+      yPos += lineHeight;
+      doc.text(
+        `Medium Priority: ${project_summary.medium_issues}`,
+        margin + 10,
+        yPos
+      );
+      yPos += lineHeight;
+      doc.text(
+        `Low Priority: ${project_summary.low_issues}`,
+        margin + 10,
+        yPos
+      );
+      yPos += 15;
+
+      // Architecture Overview
+      if (project_summary?.architecture_analysis) {
+        checkPageBreak(30);
+        doc.setFontSize(14);
+        doc.setFont(undefined, "bold");
+        doc.text("Architecture Overview", margin, yPos);
+        yPos += 10;
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, "normal");
+        addWrappedText(project_summary.architecture_analysis);
+        yPos += 10;
+      }
+
+      // File Relationships
+      if (
+        analysisData.file_relationships &&
+        analysisData.file_relationships.length > 0
+      ) {
+        checkPageBreak(40);
+        doc.setFontSize(14);
+        doc.setFont(undefined, "bold");
+        doc.text("File Relationships", margin, yPos);
+        yPos += 10;
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, "normal");
+        analysisData.file_relationships.forEach((rel, index) => {
+          checkPageBreak(20);
+          doc.text(
+            `${index + 1}. ${rel.file1} ↔ ${rel.file2}`,
+            margin + 5,
+            yPos
+          );
+          yPos += lineHeight;
+          doc.text(
+            `   Type: ${rel.relationship_type} | Score: ${rel.relationship_score}/100`,
+            margin + 5,
+            yPos
+          );
+          yPos += lineHeight;
+          if (rel.description) {
+            addWrappedText(`   ${rel.description}`, 160);
+          }
+          yPos += 5;
+        });
+        yPos += 10;
+      }
+
+      // Individual File Analyses
+      checkPageBreak(30);
+      doc.setFontSize(14);
+      doc.setFont(undefined, "bold");
+      doc.text("Individual File Analyses", margin, yPos);
+      yPos += 15;
+
+      successfulReviews.forEach((fileReview, index) => {
+        const review = fileReview.review;
+
+        checkPageBreak(50);
+        doc.setFontSize(13);
+        doc.setFont(undefined, "bold");
+        doc.text(`${index + 1}. ${fileReview.filename}`, margin, yPos);
+        yPos += 10;
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, "normal");
+
+        // Scores
+        doc.text(
+          `Overall Score: ${review.overall_score}/100`,
+          margin + 5,
+          yPos
+        );
+        yPos += lineHeight;
+        doc.text(
+          `Readability: ${review.readability_score}/100 | Maintainability: ${review.maintainability_score}/100`,
+          margin + 5,
+          yPos
+        );
+        yPos += lineHeight;
+        doc.text(
+          `Security: ${review.security_score}/100 | Performance: ${review.performance_score}/100`,
+          margin + 5,
+          yPos
+        );
+        yPos += 10;
+
+        // Summary
+        if (review.summary) {
+          doc.setFont(undefined, "bold");
+          doc.text("Summary:", margin + 5, yPos);
+          yPos += lineHeight;
+          doc.setFont(undefined, "normal");
+          addWrappedText(review.summary, 160);
+          yPos += 5;
+        }
+
+        // Issues
+        if (review.issues && review.issues.length > 0) {
+          doc.setFont(undefined, "bold");
+          doc.text(`Issues Found (${review.issues.length}):`, margin + 5, yPos);
+          yPos += lineHeight;
+          doc.setFont(undefined, "normal");
+
+          review.issues.slice(0, 5).forEach((issue, issueIndex) => {
+            checkPageBreak(15);
+            doc.text(
+              `• ${issue.severity.toUpperCase()}: ${issue.title}`,
+              margin + 10,
+              yPos
+            );
+            yPos += lineHeight;
+            if (issue.message) {
+              addWrappedText(`  ${issue.message}`, 150);
+            }
+            yPos += 3;
+          });
+
+          if (review.issues.length > 5) {
+            doc.text(
+              `... and ${review.issues.length - 5} more issues`,
+              margin + 10,
+              yPos
+            );
+            yPos += lineHeight;
+          }
+          yPos += 5;
+        }
+
+        // Suggestions
+        if (review.suggestions && review.suggestions.length > 0) {
+          doc.setFont(undefined, "bold");
+          doc.text("Top Suggestions:", margin + 5, yPos);
+          yPos += lineHeight;
+          doc.setFont(undefined, "normal");
+
+          review.suggestions.slice(0, 3).forEach((suggestion) => {
+            checkPageBreak(10);
+            doc.text(`• ${suggestion}`, margin + 10, yPos);
+            yPos += lineHeight;
+          });
+          yPos += 5;
+        }
+
+        yPos += 10;
+      });
+
+      // Summary & Recommendations
+      if (project_summary?.overall_recommendations) {
+        checkPageBreak(30);
+        doc.setFontSize(14);
+        doc.setFont(undefined, "bold");
+        doc.text("Overall Recommendations", margin, yPos);
+        yPos += 10;
+
+        doc.setFontSize(11);
+        doc.setFont(undefined, "normal");
+        project_summary.overall_recommendations.forEach((rec) => {
+          checkPageBreak(10);
+          doc.text(`• ${rec}`, margin + 5, yPos);
+          yPos += lineHeight;
+        });
+      }
+
+      doc.save("comprehensive-multiple-files-review-report.pdf");
     } catch (error) {
       console.error("Error generating PDF:", error);
       import("react-hot-toast").then((toast) => {

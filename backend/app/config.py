@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     
     # CORS Configuration
     allowed_origins: List[str] = Field(
-        default=["http://localhost:3000","http://code-review-assistant-one.vercel.app/","https://code-review-assistant-one.vercel.app/","https://code-review-assistant-git-master-andy210904s-projects.vercel.app/","https://code-review-assistant-oztcbu4wb-andy210904s-projects.vercel.app/"], 
+        default=["http://localhost:3000","http://code-review-assistant-one.vercel.app","https://code-review-assistant-one.vercel.app","https://code-review-assistant-git-master-andy210904s-projects.vercel.app","https://code-review-assistant-oztcbu4wb-andy210904s-projects.vercel.app"], 
         alias="ALLOWED_ORIGINS"
     )
     allow_credentials: bool = Field(default=True, alias="ALLOW_CREDENTIALS")

@@ -120,10 +120,28 @@ const MultipleFileReview = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Multiple Files Code Review
-        </h1>
-        <p className="text-lg text-gray-600">
+        <div className="flex items-center justify-center space-x-3 mb-4">
+          <svg
+            className="w-8 h-8 text-emerald-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+            />
+          </svg>
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-100 font-mono">
+            Multiple Files Code Review
+          </h1>
+        </div>
+        <p className="text-lg text-slate-300 font-mono">
+          $ upload --multiple --target=project_analyzer
+        </p>
+        <p className="text-sm text-slate-400 mt-2">
           Upload multiple code files for comprehensive project analysis and
           cross-file insights
         </p>
@@ -145,54 +163,65 @@ const MultipleFileReview = () => {
       {/* Selected Files List */}
       {files && files.length > 0 && (
         <motion.div
-          className="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
+          className="bg-slate-800 rounded-xl p-6 shadow-2xl border border-slate-600"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Selected Files ({files.length})
+          <h2 className="text-xl font-semibold text-slate-100 mb-4 font-mono">
+            $ files_queued --count={files.length}
           </h2>
           <div className="space-y-3 max-h-60 overflow-y-auto">
             {files.map((file, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                className="flex items-center justify-between p-3 bg-slate-700 rounded-lg border border-slate-600"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="text-2xl">
-                    {file.name.endsWith(".py")
-                      ? "🐍"
-                      : file.name.endsWith(".js") || file.name.endsWith(".jsx")
-                      ? "📜"
-                      : file.name.endsWith(".java")
-                      ? "☕"
-                      : file.name.endsWith(".cpp") || file.name.endsWith(".c")
-                      ? "⚙️"
-                      : file.name.endsWith(".go")
-                      ? "🔷"
-                      : file.name.endsWith(".rs")
-                      ? "🦀"
-                      : file.name.endsWith(".php")
-                      ? "🐘"
-                      : file.name.endsWith(".rb")
-                      ? "💎"
-                      : file.name.endsWith(".swift")
-                      ? "🍎"
-                      : file.name.endsWith(".kt")
-                      ? "🎯"
-                      : "📄"}
+                  <div className="text-emerald-400">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      {file.name.endsWith(".py") ? (
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      ) : file.name.endsWith(".js") ||
+                        file.name.endsWith(".jsx") ? (
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        />
+                      ) : (
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      )}
+                    </svg>
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">{file.name}</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="font-medium text-slate-100 font-mono">
+                      {file.name}
+                    </div>
+                    <div className="text-sm text-slate-400 font-mono">
                       {(file.size / 1024).toFixed(1)} KB
                     </div>
                   </div>
                 </div>
                 <button
                   onClick={() => removeFile(index)}
-                  className="text-red-500 hover:text-red-700 p-2"
+                  className="text-red-400 hover:text-red-300 hover:bg-red-900/20 p-2 rounded border border-transparent hover:border-red-500/50 transition-colors"
                 >
                   <svg
                     className="w-5 h-5"
@@ -225,26 +254,38 @@ const MultipleFileReview = () => {
           <button
             onClick={handleReview}
             disabled={loading}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white px-8 py-3 rounded-lg font-mono font-medium hover:from-emerald-700 hover:to-emerald-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 border border-emerald-500/50 shadow-lg"
           >
             {loading ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Analyzing...</span>
+                <span>$ analyzing...</span>
               </>
             ) : (
               <>
-                <span>🔍</span>
-                <span>Start Review ({files.length} files)</span>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <span>$ execute_batch_analysis --files={files.length}</span>
               </>
             )}
           </button>
 
           <button
             onClick={handleReset}
-            className="bg-gray-100 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200"
+            className="bg-slate-700 text-slate-200 px-8 py-3 rounded-lg font-mono font-medium hover:bg-slate-600 transition-colors duration-200 border border-slate-600"
           >
-            Reset
+            $ reset
           </button>
         </motion.div>
       )}

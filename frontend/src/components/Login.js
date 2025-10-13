@@ -79,7 +79,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -91,10 +91,10 @@ const Login = () => {
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center"
+            className="mx-auto h-16 w-16 bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl flex items-center justify-center border border-emerald-500/30 shadow-lg"
           >
             <svg
-              className="h-8 w-8 text-white"
+              className="h-8 w-8 text-emerald-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -103,15 +103,15 @@ const Login = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
               />
             </svg>
           </motion.div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Welcome back
+          <h2 className="mt-6 text-3xl font-extrabold text-slate-100 font-mono">
+            $ auth --login
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your Code Review Assistant account
+          <p className="mt-2 text-sm text-slate-400 font-mono">
+            Access your CodeReview/{">"}workspace
           </p>
         </div>
       </motion.div>
@@ -122,24 +122,24 @@ const Login = () => {
         transition={{ duration: 0.5, delay: 0.3 }}
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
       >
-        <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+        <div className="bg-slate-800 py-8 px-4 shadow-2xl sm:rounded-xl sm:px-10 border border-slate-700">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm"
+                className="bg-red-900/30 border border-red-500/50 text-red-300 px-4 py-3 rounded-lg text-sm font-mono"
               >
-                {error}
+                $ error: {error}
               </motion.div>
             )}
 
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-slate-200 font-mono"
               >
-                Email address
+                $ email --input
               </label>
               <div className="mt-1">
                 <input
@@ -150,8 +150,8 @@ const Login = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Enter your email"
+                  className="appearance-none block w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg placeholder-slate-400 text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
+                  placeholder="user@domain.com"
                 />
               </div>
             </div>
@@ -159,9 +159,9 @@ const Login = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-slate-200 font-mono"
               >
-                Password
+                $ password --secure
               </label>
               <div className="mt-1">
                 <input
@@ -172,8 +172,8 @@ const Login = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Enter your password"
+                  className="appearance-none block w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg placeholder-slate-400 text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-colors"
+                  placeholder="••••••••••••"
                 />
               </div>
             </div>
@@ -182,9 +182,9 @@ const Login = () => {
               <div className="text-sm">
                 <Link
                   to="/reset-password"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-emerald-400 hover:text-emerald-300 font-mono transition-colors"
                 >
-                  Forgot your password?
+                  $ reset --password
                 </Link>
               </div>
             </div>
@@ -193,15 +193,15 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium font-mono rounded-lg text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
               >
                 {loading ? (
                   <div className="flex items-center">
                     <LoadingSpinner size="small" />
-                    <span className="ml-2">Signing in...</span>
+                    <span className="ml-2">$ authenticating...</span>
                   </div>
                 ) : (
-                  "Sign in"
+                  "$ execute --login"
                 )}
               </button>
             </div>
@@ -210,11 +210,11 @@ const Login = () => {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-slate-600" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  New to Code Review Assistant?
+                <span className="px-2 bg-slate-800 text-slate-400 font-mono">
+                  $ new_user --register
                 </span>
               </div>
             </div>
@@ -222,9 +222,9 @@ const Login = () => {
             <div className="mt-6">
               <Link
                 to="/signup"
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+                className="w-full flex justify-center py-3 px-4 border border-slate-600 rounded-lg shadow-sm text-sm font-medium font-mono text-slate-300 bg-slate-700 hover:bg-slate-600 hover:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 focus:ring-offset-slate-800 transition-all duration-200"
               >
-                Create an account
+                $ create --account
               </Link>
             </div>
           </div>

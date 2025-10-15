@@ -8,7 +8,7 @@
     <p>API Documentation : https://code-review-assistant-s55r.onrender.com/docs</p>
 </div>
 
-## DEMO 
+## 🎥 DEMO 
 [![Watch the video](/Thumbnail.png)](https://www.youtube.com/watch?v=5FmutZIuh4s)
 
 ## 🌟 Overview

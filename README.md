@@ -3,6 +3,8 @@
 <div align = "center">
     <h3>AI-Powered Code Review and Analysis Tool</h3>
     <p>Enhance your code quality with intelligent analysis, suggestions, and comprehensive reporting</p>
+    <p>Backend Deployment : https://code-review-assistant-s55r.onrender.com</p>
+    <p>API Documentation : https://code-review-assistant-s55r.onrender.com/docs</p>
 </div>
 
 ## 🌟 Overview

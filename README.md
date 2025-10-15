@@ -9,7 +9,7 @@
 </div>
 
 ## DEMO 
-[![Watch the video](https://img.youtube.com/vi/5FmutZIuh4s/maxresdefault.jpg)](https://www.youtube.com/watch?v=5FmutZIuh4s)
+[![Watch the video](/Thumbnail.png)](https://www.youtube.com/watch?v=5FmutZIuh4s)
 
 ## 🌟 Overview
 

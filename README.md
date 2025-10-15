@@ -8,6 +8,9 @@
     <p>API Documentation : https://code-review-assistant-s55r.onrender.com/docs</p>
 </div>
 
+## DEMO 
+[![Watch the video](https://img.youtube.com/vi/v=5FmutZIuh4s/0.jpg)](https://www.youtube.com/watch?v=5FmutZIuh4s)
+
 ## 🌟 Overview
 
 The Code Review Assistant is a comprehensive web application that leverages AI to analyze source code files and provide detailed reviews, suggestions, and quality assessments. It supports both single file and multiple file analysis, offering insights into code quality, security, performance, and maintainability.
